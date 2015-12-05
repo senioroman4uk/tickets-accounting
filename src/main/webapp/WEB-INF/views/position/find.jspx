@@ -1,0 +1,51 @@
+<!--
+  Created by IntelliJ IDEA.
+  User: Vladyslav
+  Date: 03.12.2015
+  Time: 0:08
+  To change this template use File | Settings | File Templates.
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns="http://www.w3.org/1999/xhtml" version="2.0"
+          xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:spring="http://www.springframework.org/tags"
+          xmlns:form="http://www.springframework.org/tags/form"
+>
+    <h1>Керування посадами</h1>
+    <a class="btn btn-primary" href="${pageContext.request.contextPath}/positions/create">Додати</a>
+    <div class="clearfix"></div>
+    <c:choose>
+        <c:when test="${empty type || empty message}"/>
+        <c:otherwise>
+            <div class="alert alert-${type}">${message}</div>
+        </c:otherwise>
+    </c:choose>
+
+    <c:if test="${not empty positions}">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Назва посади</th>
+            </tr>
+            </thead>
+            <tbody>
+            <c:forEach items="${positions}" var="position">
+                <tr>
+                    <td>
+                        ${position.name}
+                    </td>
+                    <td>
+                        <a href="${pageContext.request.contextPath}/positions/${position.id}" class="btn btn-sm btn-primary">
+                            <span class="glyphicon glyphicon-pencil" />
+                        </a>
+                        <a href="${pageContext.request.contextPath}/positions/${position.id}/delete" class="btn btn-sm btn-danger delete-button">
+                            <span class="glyphicon glyphicon-erase" />
+                        </a>
+                    </td>
+                </tr>
+            </c:forEach>
+            </tbody>
+        </table>
+    </c:if>
+    <c:if test="${empty positions}">
+        <h2 class="alert alert-warning">Список посад порожній</h2>
+    </c:if>
+</jsp:root>

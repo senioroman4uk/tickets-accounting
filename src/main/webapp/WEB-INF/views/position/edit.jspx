@@ -1,0 +1,23 @@
+<!--
+  Created by IntelliJ IDEA.
+  User: Vladyslav
+  Date: 05.12.2015
+  Time: 15:07
+  To change this template use File | Settings | File Templates.
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns="http://www.w3.org/1999/xhtml"
+          xmlns:spring="http://www.springframework.org/tags"
+          xmlns:form="http://www.springframework.org/tags/form"
+          version="2.0">
+
+    <form:form action="${pageContext.request.contextPath}/positions/" method="post" modelAttribute="position">
+        <form:hidden path="id"/>
+        <div class="form-group">
+            <label for="name">Назва посади</label>
+            <form:input path="name" cssClass="form-control" id="name"/>
+            <form:errors path="name" class="text-danger" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Зберегти</button>
+    </form:form>
+</jsp:root>

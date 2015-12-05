@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver" />
+        <property name="url" value="jdbc:sqlserver://localhost;user=sa;password=sa;databaseName=IS_33_24;Encrypt=false"/>
+    </bean>
+
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <bean id="employeeDAO" class="org.kpi.senioroman4uk.tickets_accounting.dao.EmployeeDAOImplementation">
+        <property name="dataSource" value="#{dataSource}" />
+    </bean>
+    <bean id="positionDAO" class="org.kpi.senioroman4uk.tickets_accounting.dao.PositionDAOImplementation">
+        <property name="dataSource" value="#{dataSource}" />
+    </bean>
+
+
+
+    <bean id="validator"
+          class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
+</beans>

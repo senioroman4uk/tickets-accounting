@@ -1,0 +1,47 @@
+<!--
+  Created by IntelliJ IDEA.
+  User: Vladyslav
+  Date: 24.11.2015
+  Time: 6:13
+  To change this template use File | Settings | File Templates.
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns="http://www.w3.org/1999/xhtml" version="2.0"
+          xmlns:form="http://www.springframework.org/tags/form">
+
+    <form:form action="${pageContext.request.contextPath}/employees/" method="post" modelAttribute="employee">
+        <form:hidden path="id"/>
+
+        <div class="form-group">
+            <label for="lastname">Lastname</label>
+            <form:input path="lastname" cssClass="form-control" id="lastname" />
+            <form:errors path="lastname" class="text-danger" />
+        </div>
+
+        <div class="form-group">
+            <label for="firstname">Firstname</label>
+            <form:input path="firstname" cssClass="form-control" id="firstname"/>
+            <form:errors path="firstname" class="text-danger" />
+        </div>
+
+        <div class="form-group">
+            <label>Middlename</label>
+            <form:input path="middlename" cssClass="form-control" id="middlename"/>
+            <form:errors path="firstname" class="text-danger" />
+        </div>
+        <div class="form-group">
+            <label for="birthDate">Birthdate</label>
+            <form:input path="birthDate"  cssClass="form-control" id="birthDate"/>
+            <form:errors path="birthDate" class="text-danger"/>
+        </div>
+        <div class="form-group">
+            <label for="position">Position</label>
+            <form:select path="position" cssClass="form-control" itemValue="id">
+                <form:option value="-1">Не обрано</form:option>
+                <form:options items="${positions}" itemValue="id"/>
+                <form:errors path="position" class="text-danger" />
+            </form:select>
+            <form:errors path="position" class="text-danger"/>
+        </div>
+        <button type="submit" class="btn btn-lg btn-primary">Зберегти</button>
+    </form:form>
+</jsp:root>

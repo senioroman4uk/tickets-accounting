@@ -1,0 +1,39 @@
+<!--
+  Created by IntelliJ IDEA.
+  User: Vladyslav
+  Date: 22.11.2015
+  Time: 2:46
+  To change this template use File | Settings | File Templates.
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns="http://www.w3.org/1999/xhtml" version="2.0"
+          xmlns:spring="http://www.springframework.org/tags" xmlns:tiles="http://tiles.apache.org/tags-tiles">
+    <jsp:output doctype-root-element="HTML" doctype-system="about:legacy-compat"/>
+    <jsp:directive.page contentType="text/html;charset=UTF-8" pageEncoding="UTF-8"/>
+
+    <html>
+    <head>
+        <!--<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>-->
+        <!--<meta http-equiv="X-UA-Compatible" content="IE=8"/>-->
+        <!-- Bootstrap core CSS -->
+        <spring:url value="/resources/bower_components/bootstrap/dist/css/bootstrap.css" var="bootstrap_url"/>
+        <spring:url value="/resources/styles/style.css" var="style_url"/>
+        <spring:url value="/resources/bower_components/jquery/dist/jquery.min.js" var="jquery_url"/>
+        <spring:url value="/resources/bower_components/bootstrap/dist/js/bootstrap.min.js" var="bootstrap_js_url"/>
+
+        <link rel="stylesheet" type="text/css" media="screen" href="${bootstrap_url}"/>
+        <link rel="stylesheet" type="text/css" media="screen" href="${style_url}"/>
+        <script type="text/javascript" src="${jquery_url}" > <jsp:text/> </script>
+        <script type="text/javascript" src="${bootstrap_js_url}"><jsp:text/></script>
+        <title>
+            <spring:message code="head_title"/>
+        </title>
+    </head>
+    <body>
+     <tiles:insertAttribute name="header"/>
+     <div class="container-fluid">
+     <tiles:insertAttribute name="body"/>
+     </div>
+     <tiles:insertAttribute name="footer" />
+    </body>
+    </html>
+</jsp:root>

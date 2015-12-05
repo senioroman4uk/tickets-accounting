@@ -1,0 +1,11 @@
+/*BEGIN: Footer styling*/
+footer {
+    background-color: #222;
+    color: #FFFFFF;
+    padding: 10px 0 10px;
+}
+
+.with-border {
+    border-bottom: 1px solid #4f82e9;
+}
+/*END: Footer styling*/

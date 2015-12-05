@@ -1,0 +1,25 @@
+{
+  "name": "tickets-accounting",
+  "authors": [
+    "Vladyslav Romanchuk <senioroman4uk@gmail.com>"
+  ],
+  "description": "Automation of tickets accounting for the bus park",
+  "main": "",
+  "moduleType": [
+    "node"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "src/main/webapp/bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.6"
+  }
+}

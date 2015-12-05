@@ -1,0 +1,58 @@
+<!--
+  Created by IntelliJ IDEA.
+  User: Vladyslav
+  Date: 24.11.2015
+  Time: 3:08
+  To change this template use File | Settings | File Templates.
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns="http://www.w3.org/1999/xhtml" version="2.0"
+          xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:fmt="http://java.sun.com/jsp/jstl/fmt">
+    <footer>
+        <div class="info">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                        <h3 class="with-border">About</h3>
+                        <p>
+                            Site for people that are found of watching movies, serials etc. Of course it won't replace IMDB or others.
+                            It's just a tool that helps you to remember watched films.
+                        </p>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-4">
+                        <h3 class="with-border">Contact</h3>
+                        <ul class="list-unstyled contact">
+                            <li>
+                                <p>
+                                    <strong>
+                                        <!--<i class="glyphicon glyphicon-map-marker"/>-->
+                                        Address:
+                                    </strong>
+                                    Snyatyn, Ukraine, 78300
+                                </p>
+                            </li>
+                            <li>
+                                <p>
+                                    <strong>
+                                        <!--<i class="glyphicon glyphicon-envelope"/>-->
+                                        Mail Us:
+                                    </strong>
+                                    <a href="#">vlmromanchuk@yandex.ua</a>
+                                </p>
+                            </li>
+                            <li> <p><strong> Phone:</strong> +12 345 6789</p></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="copyright">
+            <div class="container-fluid">
+                <p class="pull-left">
+                    <jsp:useBean id="now" class="java.util.Date" scope="page"/>
+                    © Created by Vladyslav Romanchuk <fmt:formatDate value="${now}" pattern="y" />
+                </p>
+            </div>
+        </div>
+    </footer>
+
+</jsp:root>

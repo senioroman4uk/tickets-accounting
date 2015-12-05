@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  Created by IntelliJ IDEA.
+  User: Vladyslav
+  Date: 24.11.2015
+  Time: 2:56
+  To change this template use File | Settings | File Templates.
+-->
+
+
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns="http://www.w3.org/1999/xhtml" version="2.0"
+          xmlns:spring="http://java.sun.com/jsp/jstl/fmt" xmlns:c="http://java.sun.com/jsp/jstl/core">
+    <h1>Керування працівниками</h1>
+    <a class="btn btn-primary" href="${pageContext.request.contextPath}/employees/create">Додати</a>
+    <div class="clearfix"></div>
+    <c:choose>
+        <c:when test="${empty type || empty message}"/>
+        <c:otherwise>
+            <div class="alert alert-${type}">${message}</div>
+        </c:otherwise>
+    </c:choose>
+    <c:if test="${not empty employees}">
+    <table class="table">
+    <thead>
+    <tr>
+        <th><spring:message key="Employee.lastname"/></th>
+        <th><spring:message key="Employee.firstname"/></th>
+        <th><spring:message key="Employee.middlename"/></th>
+        <th><spring:message key="Employee.birthDate"/></th>
+        <th><spring:message key="Employee.position"/></th>
+    </tr>
+    </thead>
+    <tbody>
+        <c:forEach items="${employees}" var="employee">
+            <tr>
+                <td>${employee.lastname}</td>
+                <td>${employee.firstname}</td>
+                <td>${employee.middlename}</td>
+                <td>${employee.birthDate}</td>
+                <td>${employee.position}</td>
+                <td>
+                    <a href="${pageContext.request.contextPath}/employees/${employee.id}" class="btn btn-sm btn-primary">
+                        <span class="glyphicon glyphicon-pencil" />
+                    </a>
+                    <a href="${pageContext.request.contextPath}/employees/${employee.id}/delete" class="btn btn-sm btn-danger delete-button" data-id="${employee.id}">
+                        <span class="glyphicon glyphicon-erase" />
+                    </a>
+                </td>
+            </tr>
+        </c:forEach>
+    </tbody>
+</table>
+    </c:if>
+    <c:if test="${empty employees}">
+        <h2 class="alert-warning">Список працівників порожній</h2>
+    </c:if>
+</jsp:root>
