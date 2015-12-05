@@ -4,6 +4,7 @@ import org.kpi.senioroman4uk.tickets_accounting.domain.ViewModel;
 import org.kpi.senioroman4uk.tickets_accounting.exception.ResourceNotFoundException;
 import org.kpi.senioroman4uk.tickets_accounting.service.GenericService;
 import org.springframework.http.HttpStatus;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -28,7 +29,7 @@ public class BaseController {
         return "notFound";
     }
 
-    public <T extends ViewModel, U extends GenericService<T>> String handleSaving(T model,  U service, RedirectAttributes redirectAttributes) {
+    protected  <T extends ViewModel, U extends GenericService<T>> String handleSaving(T model,  U service, RedirectAttributes redirectAttributes) {
         RequestMapping requestMapping = this.getClass().getAnnotation(RequestMapping.class);
 
         if (!model.isNew()) {
@@ -39,11 +40,18 @@ public class BaseController {
             return "redirect:" + requestMapping.value()[0] + "/" + model.getId();
         } else {
             if (service.create(model)) {
-                addFlashMessage("Користувача успішно створено", "success", redirectAttributes);
+                addFlashMessage("Запис успішно створено", "success", redirectAttributes);
                 return "redirect:" + requestMapping.value()[0];
             } else
-                addFlashMessage("Оновлення даних не вдалося", "danger", redirectAttributes);
+                addFlashMessage("Створення запису не вдалося", "danger", redirectAttributes);
             return "redirect:" + requestMapping.value()[0] + "/" + model.getId();
         }
+    }
+
+    protected Model addMessage(String message, String type, Model model){
+         model.addAttribute("message", message);
+         model.addAttribute("type", type);
+
+        return model;
     }
 }

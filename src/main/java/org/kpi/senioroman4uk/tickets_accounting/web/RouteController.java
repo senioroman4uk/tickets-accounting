@@ -1,11 +1,11 @@
 package org.kpi.senioroman4uk.tickets_accounting.web;
 
-import org.apache.log4j.Logger;
-import org.kpi.senioroman4uk.tickets_accounting.domain.Position;
-import org.kpi.senioroman4uk.tickets_accounting.exception.PositionHasEmployeesException;
+import org.kpi.senioroman4uk.tickets_accounting.domain.Route;
+import org.kpi.senioroman4uk.tickets_accounting.exception.HasControlLettersException;
 import org.kpi.senioroman4uk.tickets_accounting.exception.ResourceNotFoundException;
-import org.kpi.senioroman4uk.tickets_accounting.service.PositionService;
+import org.kpi.senioroman4uk.tickets_accounting.service.RouteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,22 +20,21 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Vladyslav on 02.12.2015.
+ * Created by Vladyslav on 05.12.2015.
  *
  */
 
 @Controller
-@RequestMapping("/positions")
-public class PositionController extends BaseController {
-    private static final Logger logger = Logger.getLogger(EmployeeController.class);
+@RequestMapping("/routes")
+public class RouteController extends BaseController {
     @Autowired
-    private PositionService positionService;
+    private RouteService routeService;
 
 
     @RequestMapping(method = {RequestMethod.GET})
     public String find(Model model, RedirectAttributes redirectAttributes) {
-        List<Position> positions = positionService.findAll();
-        model.addAttribute("positions", positions);
+        List<Route> routes = routeService.findAll();
+        model.addAttribute("routes", routes);
 
         Map<String, ?> flash = redirectAttributes.getFlashAttributes();
         if (flash.containsKey("message") && flash.containsKey("type")) {
@@ -43,50 +42,54 @@ public class PositionController extends BaseController {
             model.addAttribute("type", flash.get("type"));
         }
 
-        return "position/find";
+        return "route/find";
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public String findOne(@PathVariable("id") int id, Model model) {
-        logger.info("PositionController.findOne() is executed");
-
-        Position position = positionService.find(id);
-        if (position == null)
+        Route route = routeService.find(id);
+        if (route == null)
             throw new ResourceNotFoundException();
 
-        model.addAttribute("position", position);
-        return "position/edit";
+        model.addAttribute("route", route);
+        return "route/edit";
     }
 
     @RequestMapping(value = "/create")
     public String showCreateForm(Model model) {
-        Position position = new Position();
+        Route route = new Route();
 
-        model.addAttribute("position", position);
-        return "position/edit";
+        model.addAttribute("route", route);
+        return "route/edit";
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public String createOrUpdate(@ModelAttribute("position") @Validated Position position,
-                                 BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-        if (bindingResult.hasErrors()) {
-            return "employee/edit";
+    public String createOrUpdate(@ModelAttribute("route") @Validated Route route,
+                                 BindingResult bindingResult,  Model model, RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors())
+            return "route/edit";
+
+        try {
+            return handleSaving(route, routeService, redirectAttributes);
+        } catch (DuplicateKeyException e) {
+            model = addMessage("Маршрут з таким номером вже існує", "danger", model);
         }
 
-        return handleSaving(position, positionService, redirectAttributes);
+        return "route/edit";
     }
 
     @RequestMapping(value = "/{id}/delete", method = {RequestMethod.POST, RequestMethod.GET})
-    public String delete(@PathVariable("id") int id, final RedirectAttributes redirectAttributes) {
+    public String delete(@PathVariable("id") int id, Model model, final RedirectAttributes redirectAttributes) {
         try {
-            if (positionService.delete(id))
+            if (routeService.delete(id))
                 addFlashMessage("Запис успішно видалено", "success", redirectAttributes);
             else
                 addFlashMessage("Сталася помилка", "danger", redirectAttributes);
-        } catch (PositionHasEmployeesException e) {
-            addFlashMessage("Неможливо видалити посаду, оскільки вона містить робітників", "danger", redirectAttributes);
+        }
+        catch (HasControlLettersException ex) {
+            addFlashMessage("Маршрут має пов'язані з ним документи, спочатку необхідно видалити їх", "danger", redirectAttributes);
         }
 
-        return "redirect:/positions";
+        return "redirect:/routes";
     }
 }

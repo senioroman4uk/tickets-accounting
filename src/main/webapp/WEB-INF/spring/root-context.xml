@@ -21,6 +21,9 @@
     <bean id="positionDAO" class="org.kpi.senioroman4uk.tickets_accounting.dao.PositionDAOImplementation">
         <property name="dataSource" value="#{dataSource}" />
     </bean>
+    <bean id="routeDAO" class="org.kpi.senioroman4uk.tickets_accounting.dao.RouteDAOImplementation">
+        <property name="dataSource" value="#{dataSource}" />
+    </bean>
 
 
 

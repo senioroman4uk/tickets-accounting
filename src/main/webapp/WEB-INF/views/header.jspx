@@ -32,6 +32,11 @@
                             <spring:message code="navbar.positions"/>
                         </a>
                     </li>
+                    <li>
+                        <a href="${pageContext.request.contextPath}/routes/">
+                            <spring:message code="navbar.routes"/>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>

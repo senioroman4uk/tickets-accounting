@@ -1,21 +1,26 @@
 package org.kpi.senioroman4uk.tickets_accounting.domain;
 
+import javax.validation.constraints.Min;
 import java.io.Serializable;
 
 /**
  * Created by Vladyslav on 21.11.2015.
  *
  */
-public class Route implements Serializable {
-    private int id;
+public class Route implements Serializable, ViewModel {
+    private Integer id;
+
+    @Min(1)
     private int number;
+
+    @Min(1)
     private int length;
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -33,5 +38,10 @@ public class Route implements Serializable {
 
     public void setLength(int length) {
         this.length = length;
+    }
+
+    @Override
+    public boolean isNew() {
+        return id == null;
     }
 }
