@@ -1,0 +1,36 @@
+<!--
+  Created by IntelliJ IDEA.
+  User: Vladyslav
+  Date: 06.12.2015
+  Time: 11:28
+  To change this template use File | Settings | File Templates.
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns="http://www.w3.org/1999/xhtml" version="2.0"
+          xmlns:form="http://www.springframework.org/tags/form">
+
+    <form:form action="${pageContext.request.contextPath}/tickets-invoices/" method="post" modelAttribute="ticketsInvoice">
+        <form:hidden path="id"/>
+
+        <div class="form-group">
+            <label for="amount">Кількість квитків</label>
+            <form:input path="amount" cssClass="form-control" id="amount" />
+            <form:errors path="amount" class="text-danger" />
+        </div>
+
+        <div class="form-group">
+            <label for="date">Дата накладної</label>
+            <form:input path="date" cssClass="form-control" id="date"/>
+            <form:errors path="date" class="text-danger" />
+        </div>
+
+        <div class="form-group">
+            <label for="MainCashier">Головний касир</label>
+            <form:select path="MainCashier" cssClass="form-control" itemValue="id">
+                <form:option value="${null}">Не обрано</form:option>
+                <form:options items="${employees}" itemValue="id"/>
+            </form:select>
+            <form:errors path="MainCashier" class="text-danger" />
+        </div>
+        <button type="submit" class="btn btn-lg btn-primary">Зберегти</button>
+    </form:form>
+</jsp:root>

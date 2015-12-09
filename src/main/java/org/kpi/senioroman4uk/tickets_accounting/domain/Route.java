@@ -41,6 +41,11 @@ public class Route implements Serializable, ViewModel {
     }
 
     @Override
+    public String toString() {
+        return Integer.toString(number);
+    }
+
+    @Override
     public boolean isNew() {
         return id == null;
     }

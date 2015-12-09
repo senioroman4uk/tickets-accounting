@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Vladyslav on 05.12.2015.
@@ -36,11 +35,7 @@ public class RouteController extends BaseController {
         List<Route> routes = routeService.findAll();
         model.addAttribute("routes", routes);
 
-        Map<String, ?> flash = redirectAttributes.getFlashAttributes();
-        if (flash.containsKey("message") && flash.containsKey("type")) {
-            model.addAttribute("message", flash.get("message"));
-            model.addAttribute("type", flash.get("type"));
-        }
+        handleFlashMessages(redirectAttributes, model);
 
         return "route/find";
     }
@@ -70,7 +65,7 @@ public class RouteController extends BaseController {
             return "route/edit";
 
         try {
-            return handleSaving(route, routeService, redirectAttributes);
+            return handleSaving(route, routeService, redirectAttributes, null);
         } catch (DuplicateKeyException e) {
             model = addMessage("Маршрут з таким номером вже існує", "danger", model);
         }
@@ -79,7 +74,7 @@ public class RouteController extends BaseController {
     }
 
     @RequestMapping(value = "/{id}/delete", method = {RequestMethod.POST, RequestMethod.GET})
-    public String delete(@PathVariable("id") int id, Model model, final RedirectAttributes redirectAttributes) {
+    public String delete(@PathVariable("id") int id, final RedirectAttributes redirectAttributes) {
         try {
             if (routeService.delete(id))
                 addFlashMessage("Запис успішно видалено", "success", redirectAttributes);

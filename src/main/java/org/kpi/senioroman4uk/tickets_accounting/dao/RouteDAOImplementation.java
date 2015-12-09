@@ -1,12 +1,11 @@
 package org.kpi.senioroman4uk.tickets_accounting.dao;
 
 
-import org.kpi.senioroman4uk.tickets_accounting.domain.Position;
 import org.kpi.senioroman4uk.tickets_accounting.domain.Route;
-import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.omg.CORBA.PUBLIC_MEMBER;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
 import java.sql.ResultSet;
@@ -18,16 +17,8 @@ import java.util.List;
  * Created by Vladyslav on 05.12.2015.
  *
  */
-public class RouteDAOImplementation implements RouteDAO {
-    private NamedParameterJdbcTemplate jdbcTemplate;
-    private DataSource dataSource;
 
-    @Override
-    public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
-        jdbcTemplate = new NamedParameterJdbcTemplate(this.dataSource);
-    }
-
+public class RouteDAOImplementation extends GenericDAOImplementation<Route> implements RouteDAO {
     @Override
     public boolean create(Route entity) {
         String sql = "INSERT INTO Route([number], [length]) " +
@@ -49,19 +40,18 @@ public class RouteDAOImplementation implements RouteDAO {
 
     @Override
     public Route find(int id) {
-        String sql = "SELECT * " +
+        //language=SQL
+        String sql = "SELECT id routeId, number, [length] " +
                 "FROM Route " +
                 "WHERE id = :id";
-        HashMap<String, Integer> parameters = new HashMap<>();
-        parameters.put("id", id);
 
-        List<Route> routes = jdbcTemplate.query(sql, parameters, new RouteRowMapper());
-        return routes.isEmpty() ? null : routes.get(0);
+        return super.find(id, sql, new RouteRowMapper(), new HashMap<>());
     }
 
     @Override
     public List<Route> findAll() {
-        String sql = "SELECT * " +
+        //language=SQL
+        String sql = "SELECT id routeId, number, [length]" +
                 "FROM Route";
 
         return jdbcTemplate.query(sql, new RouteRowMapper());
@@ -78,14 +68,6 @@ public class RouteDAOImplementation implements RouteDAO {
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
-        if (dataSource == null)
-            throw new BeanCreationException("Must set dataSource on ContactDao");
-        if (jdbcTemplate == null)
-            throw new BeanCreationException("Null NamedParameterJdbcTemplate on EmployeeDAOImplementation");
-    }
-
-    @Override
     public boolean hasControlLetters(int id) {
         String sql = "SELECT COUNT(id) " +
                 "FROM ControlLetterRow " +
@@ -97,13 +79,12 @@ public class RouteDAOImplementation implements RouteDAO {
         return jdbcTemplate.queryForObject(sql, parameters, Integer.class) > 0;
     }
 
-    private static final class RouteRowMapper implements RowMapper<Route> {
-
+    public static final class RouteRowMapper implements RowMapper<Route> {
         @Override
         public Route mapRow(ResultSet resultSet, int i) throws SQLException {
             Route route = new Route();
 
-            route.setId(resultSet.getInt("id"));
+            route.setId(resultSet.getInt("routeId"));
             route.setLength(resultSet.getInt("length"));
             route.setNumber(resultSet.getInt("number"));
 

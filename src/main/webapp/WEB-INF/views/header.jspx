@@ -37,6 +37,11 @@
                             <spring:message code="navbar.routes"/>
                         </a>
                     </li>
+                    <li>
+                        <a href="${pageContext.request.contextPath}/tickets-invoices/">
+                            <spring:message code="navbar.tickets_invoices"/>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>

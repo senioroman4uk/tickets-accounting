@@ -1,12 +1,10 @@
 package org.kpi.senioroman4uk.tickets_accounting.dao;
 
 import org.kpi.senioroman4uk.tickets_accounting.domain.Position;
-import org.kpi.senioroman4uk.tickets_accounting.exception.PositionHasEmployeesException;
-import org.springframework.beans.factory.BeanCreationException;
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-import javax.sql.DataSource;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashMap;
@@ -16,16 +14,8 @@ import java.util.List;
  * Created by Vladyslav on 03.12.2015.
  *
  */
-public class PositionDAOImplementation implements PositionDAO {
-    private NamedParameterJdbcTemplate jdbcTemplate;
-    private DataSource dataSource;
 
-    @Override
-    public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
-        this.jdbcTemplate = new NamedParameterJdbcTemplate(this.dataSource);
-    }
-
+public class PositionDAOImplementation extends GenericDAOImplementation<Position> implements PositionDAO {
     @Override
     public boolean create(Position entity) {
         String sql = "INSERT INTO EmployeeType([name]) VALUES(:name)";
@@ -50,19 +40,16 @@ public class PositionDAOImplementation implements PositionDAO {
 
     @Override
     public Position find(int id) {
-        String sql = "SELECT et.id, et.name " +
+        String sql = "SELECT et.id typeId, et.name " +
                 "FROM EmployeeType et " +
                 "WHERE id = :id";
-        HashMap<String, Object> parameters = new HashMap<>();
-        parameters.put("id", id);
 
-        List<Position> positions = jdbcTemplate.query(sql, parameters, new PositionRowMapper());
-        return positions.isEmpty() ? null : positions.get(0);
+        return super.find(id, sql, new PositionRowMapper(), new HashMap<>());
     }
 
     @Override
     public List<Position> findAll() {
-        String sql = "SELECT et.id, et.name " +
+        String sql = "SELECT et.id typeId, et.name " +
                 "FROM EmployeeType et";
 
         return jdbcTemplate.query(sql, new PositionRowMapper());
@@ -79,14 +66,6 @@ public class PositionDAOImplementation implements PositionDAO {
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
-        if (dataSource == null)
-            throw new BeanCreationException("Must set dataSource on ContactDao");
-        if (jdbcTemplate == null)
-            throw new BeanCreationException("Null NamedParameterJdbcTemplate on EmployeeDAOImplementation");
-    }
-
-    @Override
     /**
      * Checking if position has employees
      */
@@ -98,13 +77,13 @@ public class PositionDAOImplementation implements PositionDAO {
         return jdbcTemplate.queryForObject(sql, parameters, Integer.class) > 0;
     }
 
-    private static final class PositionRowMapper implements RowMapper<Position> {
+    public static final class PositionRowMapper implements RowMapper<Position> {
 
         @Override
         public Position mapRow(ResultSet resultSet, int i) throws SQLException {
             Position position = new Position();
 
-            position.setId(resultSet.getInt("id"));
+            position.setId(resultSet.getInt("typeId"));
             position.setName(resultSet.getString("name"));
 
             return position;

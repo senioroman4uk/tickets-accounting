@@ -15,17 +15,25 @@
         <property name="dataSource" ref="dataSource" />
     </bean>
 
-    <bean id="employeeDAO" class="org.kpi.senioroman4uk.tickets_accounting.dao.EmployeeDAOImplementation">
-        <property name="dataSource" value="#{dataSource}" />
-    </bean>
-    <bean id="positionDAO" class="org.kpi.senioroman4uk.tickets_accounting.dao.PositionDAOImplementation">
-        <property name="dataSource" value="#{dataSource}" />
-    </bean>
-    <bean id="routeDAO" class="org.kpi.senioroman4uk.tickets_accounting.dao.RouteDAOImplementation">
-        <property name="dataSource" value="#{dataSource}" />
+    <bean id="genericDAO" abstract="true" class="org.kpi.senioroman4uk.tickets_accounting.dao.GenericDAOImplementation">
+        <property name="dataSource" ref="dataSource"/>
     </bean>
 
-
+    <bean id="employeeDAO"
+          class="org.kpi.senioroman4uk.tickets_accounting.dao.EmployeeDAOImplementation"
+          parent="genericDAO"/>
+    <bean id="positionDAO"
+          class="org.kpi.senioroman4uk.tickets_accounting.dao.PositionDAOImplementation"
+          parent="genericDAO"/>
+    <bean id="routeDAO" class="org.kpi.senioroman4uk.tickets_accounting.dao.RouteDAOImplementation"
+          parent="genericDAO"/>
+    <bean id="ticketsInvoiceDAO"
+          class="org.kpi.senioroman4uk.tickets_accounting.dao.TicketsInvoiceDAOImplementation"
+          parent="genericDAO"/>
+    <bean id="controlLetterDAO"
+          class="org.kpi.senioroman4uk.tickets_accounting.dao.ControlLetterDAOImplementation"
+          parent="genericDAO"/>
+    <bean id="controlLetterRowDAO" class="org.kpi.senioroman4uk.tickets_accounting.dao.ControlLetterRowDAOImplementation" parent="genericDAO"/>
 
     <bean id="validator"
           class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>

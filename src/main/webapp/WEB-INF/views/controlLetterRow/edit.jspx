@@ -1,0 +1,46 @@
+<!--
+  Created by IntelliJ IDEA.
+  User: Vladyslav
+  Date: 07.12.2015
+  Time: 21:51
+  To change this template use File | Settings | File Templates.
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns="http://www.w3.org/1999/xhtml" version="2.0"
+          xmlns:form="http://www.springframework.org/tags/form">
+
+    <form:form action="${pageContext.request.contextPath}/tickets-invoices/${invoiceId}/control-letters/${controlLetterRow.controlLetterId}/rows" method="post" modelAttribute="controlLetterRow">
+        <form:hidden path="id"/>
+        <form:hidden path="controlLetterId"/>
+
+        <div class="form-group">
+            <label for="ticketsGiven">Видано квитків</label>
+            <form:input path="ticketsGiven" cssClass="form-control" id="ticketsGiven" />
+            <form:errors path="ticketsGiven" class="text-danger" />
+        </div>
+
+        <div class="form-group">
+            <label for="ticketsReturned">Квитків повернуто</label>
+            <form:input path="ticketsReturned" cssClass="form-control" id="ticketsReturned"/>
+            <form:errors path="ticketsReturned" class="text-danger" />
+        </div>
+
+        <div class="form-group">
+            <label for="conductor">Кондуктор</label>
+            <form:select path="conductor" cssClass="form-control" itemValue="id">
+                <form:option value="${null}">Не обрано</form:option>
+                <form:options items="${employees}" itemValue="id"/>
+            </form:select>
+            <form:errors path="conductor" class="text-danger" />
+        </div>
+        <div class="form-group">
+            <label for="route">Маршрут</label>
+            <form:select path="route" cssClass="form-control" itemValue="id">
+                <form:option value="${null}">Не обрано</form:option>
+                <form:options items="${routes}" itemValue="id"/>
+            </form:select>
+            <form:errors path="route" class="text-danger" />
+        </div>
+
+        <button type="submit" class="btn btn-lg btn-primary">Зберегти</button>
+    </form:form>
+</jsp:root>

@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Vladyslav on 02.12.2015.
@@ -37,11 +36,7 @@ public class PositionController extends BaseController {
         List<Position> positions = positionService.findAll();
         model.addAttribute("positions", positions);
 
-        Map<String, ?> flash = redirectAttributes.getFlashAttributes();
-        if (flash.containsKey("message") && flash.containsKey("type")) {
-            model.addAttribute("message", flash.get("message"));
-            model.addAttribute("type", flash.get("type"));
-        }
+        handleFlashMessages(redirectAttributes, model);
 
         return "position/find";
     }
@@ -73,7 +68,7 @@ public class PositionController extends BaseController {
             return "employee/edit";
         }
 
-        return handleSaving(position, positionService, redirectAttributes);
+        return handleSaving(position, positionService, redirectAttributes, null);
     }
 
     @RequestMapping(value = "/{id}/delete", method = {RequestMethod.POST, RequestMethod.GET})

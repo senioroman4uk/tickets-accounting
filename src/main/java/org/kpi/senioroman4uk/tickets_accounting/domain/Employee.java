@@ -3,7 +3,6 @@ package org.kpi.senioroman4uk.tickets_accounting.domain;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -15,9 +14,24 @@ import java.util.Date;
  */
 public class Employee implements Serializable, ViewModel {
 
+    public enum EmployeePosition {
+        MAIN_CASIER(5),
+        CASIER(1),
+        CONDUCTOR(3);
+
+        private int id;
+        EmployeePosition(int id) {
+            this.id = id;
+        }
+
+        public int getId() {
+            return id;
+        }
+    }
+
     private Integer id;
 
-    @NotNull(message = "employeeForm.position.required")
+    @NotNull
     private Position position;
 
     @Size(min = 2, max = 50)
@@ -26,10 +40,11 @@ public class Employee implements Serializable, ViewModel {
     @Size(min = 2, max = 50)
     private String lastname;
 
-    @Size(min = 2, max = 50)
+    @Size(min = 1, max = 50)
     private String middlename;
 
-    @DateTimeFormat(pattern = "yyyy-mm-dd")
+    @DateTimeFormat(pattern = "y-M-d")
+    @NotNull
     private Date birthDate;
 //    private String login;
 //    private String password;
@@ -88,5 +103,10 @@ public class Employee implements Serializable, ViewModel {
 
     public boolean isNew() {
         return id == null;
+    }
+
+    @Override
+    public String toString() {
+        return getFullname();
     }
 }

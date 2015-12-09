@@ -1,9 +1,7 @@
 package org.kpi.senioroman4uk.tickets_accounting.service;
 
 import org.kpi.senioroman4uk.tickets_accounting.dao.EmployeeDAO;
-import org.kpi.senioroman4uk.tickets_accounting.dao.PositionDAO;
 import org.kpi.senioroman4uk.tickets_accounting.domain.Employee;
-import org.kpi.senioroman4uk.tickets_accounting.domain.Position;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +37,16 @@ public class EmployeeService implements UserService {
 
     public List<Employee> findAll() {
         return employeeDAO.findAll();
+    }
+
+    @Override
+    public Employee find(int id, int positionId) {
+        return employeeDAO.find(id, positionId);
+    }
+
+    @Override
+    public List<Employee> findAll(int positionId) {
+        return employeeDAO.findAll(positionId);
     }
 
     @Override

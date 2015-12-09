@@ -1,9 +1,6 @@
 package org.kpi.senioroman4uk.tickets_accounting.domain;
 
-import org.springframework.web.servlet.View;
-
 import java.io.Serializable;
-import java.util.HashMap;
 
 /**
  * Created by Vladyslav on 22.11.2015.

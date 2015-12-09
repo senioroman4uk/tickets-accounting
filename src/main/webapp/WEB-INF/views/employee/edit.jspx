@@ -26,7 +26,7 @@
         <div class="form-group">
             <label>Middlename</label>
             <form:input path="middlename" cssClass="form-control" id="middlename"/>
-            <form:errors path="firstname" class="text-danger" />
+            <form:errors path="middlename" class="text-danger" />
         </div>
         <div class="form-group">
             <label for="birthDate">Birthdate</label>
@@ -36,7 +36,7 @@
         <div class="form-group">
             <label for="position">Position</label>
             <form:select path="position" cssClass="form-control" itemValue="id">
-                <form:option value="-1">Не обрано</form:option>
+                <form:option value="${null}">Не обрано</form:option>
                 <form:options items="${positions}" itemValue="id"/>
                 <form:errors path="position" class="text-danger" />
             </form:select>

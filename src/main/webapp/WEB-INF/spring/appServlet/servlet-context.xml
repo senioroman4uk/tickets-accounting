@@ -18,6 +18,8 @@
                 <beans:bean class="org.kpi.senioroman4uk.tickets_accounting.converters.PositionConverter"/>
                 <beans:bean class="org.kpi.senioroman4uk.tickets_accounting.converters.DateToStringConverter"/>
                 <beans:bean class="org.kpi.senioroman4uk.tickets_accounting.converters.StringToDateConverter"/>
+                <beans:bean class="org.kpi.senioroman4uk.tickets_accounting.converters.StringToEmployeeConverter"/>
+                <beans:bean class="org.kpi.senioroman4uk.tickets_accounting.converters.RouteConverter"/>
             </beans:set>
         </beans:property>
     </beans:bean>

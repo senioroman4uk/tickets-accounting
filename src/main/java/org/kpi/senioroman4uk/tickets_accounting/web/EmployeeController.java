@@ -2,22 +2,22 @@ package org.kpi.senioroman4uk.tickets_accounting.web;
 
 import org.apache.log4j.Logger;
 import org.kpi.senioroman4uk.tickets_accounting.domain.Employee;
+import org.kpi.senioroman4uk.tickets_accounting.domain.Position;
 import org.kpi.senioroman4uk.tickets_accounting.exception.ResourceNotFoundException;
+import org.kpi.senioroman4uk.tickets_accounting.service.EmployeeService;
 import org.kpi.senioroman4uk.tickets_accounting.service.PositionService;
 import org.kpi.senioroman4uk.tickets_accounting.validator.EmployeeValidator;
-import org.kpi.senioroman4uk.tickets_accounting.domain.Position;
-import org.kpi.senioroman4uk.tickets_accounting.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Vladyslav on 24.11.2015.
@@ -34,13 +34,8 @@ public class EmployeeController extends BaseController {
     private EmployeeService employeeService;
     @Autowired
     private PositionService positionService;
-    private EmployeeValidator employeeValidator;
-
-
     @Autowired
-    public void SetEmployeeValidator(EmployeeValidator validator) {
-        employeeValidator = validator;
-    }
+    private EmployeeValidator employeeValidator;
 
     @RequestMapping(method = {RequestMethod.GET})
     public String find(Model model, RedirectAttributes redirectAttributes) {
@@ -48,11 +43,7 @@ public class EmployeeController extends BaseController {
             logger.info("UserController.find() is executed");
 
         List<Employee> employees = employeeService.findAll();
-        Map<String, ?> flash = redirectAttributes.getFlashAttributes();
-        if (flash.containsKey("message") && flash.containsKey("type")) {
-            model.addAttribute("message", flash.get("message"));
-            model.addAttribute("type", flash.get("type"));
-        }
+        handleFlashMessages(redirectAttributes, model);
 
         model.addAttribute("employees", employees);
         return "employee/find";
@@ -60,8 +51,6 @@ public class EmployeeController extends BaseController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public String findOne(@PathVariable("id") int id, Model model) {
-        logger.info("UserController.findOne() is executed");
-
         Employee employee = employeeService.find(id);
         if (employee == null)
             throw new ResourceNotFoundException();
@@ -84,10 +73,9 @@ public class EmployeeController extends BaseController {
 
     @RequestMapping(value = "/{id}/delete", method = {RequestMethod.POST, RequestMethod.GET})
     public String delete(@PathVariable("id") int id, final RedirectAttributes redirectAttributes) {
-        if (employeeService.delete(id))
-            addFlashMessage("Запис успішно видалено", "success", redirectAttributes);
-        else
-            addFlashMessage("Сталася помилка", "danger", redirectAttributes);
+
+        handleDelete(employeeService, id,
+                "Видалити працівника неможливо, спочатку видаліть пов'язані з ним записи", redirectAttributes);
 
         return "redirect:/employees";
     }
@@ -99,16 +87,12 @@ public class EmployeeController extends BaseController {
 
         employeeValidator.validate(employee, bindingResult);
         if (bindingResult.hasErrors()) {
-            logger.info("form has errors");
-            logger.info(bindingResult.getAllErrors());
-
-
             List<Position> positions = positionService.findAll();
             model.addAttribute("positions", positions);
 
             return "employee/edit";
         }
 
-        return handleSaving(employee, employeeService, redirectAttributes);
+        return handleSaving(employee, employeeService, redirectAttributes, null);
     }
 }

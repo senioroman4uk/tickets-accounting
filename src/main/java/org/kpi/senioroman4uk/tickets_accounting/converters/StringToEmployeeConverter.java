@@ -1,24 +1,24 @@
 package org.kpi.senioroman4uk.tickets_accounting.converters;
 
-
-import org.kpi.senioroman4uk.tickets_accounting.domain.Position;
-import org.kpi.senioroman4uk.tickets_accounting.service.PositionService;
+import org.kpi.senioroman4uk.tickets_accounting.domain.Employee;
+import org.kpi.senioroman4uk.tickets_accounting.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 /**
- * Created by Vladyslav on 30.11.2015.
  *
+ * Created by Vladyslav on 06.12.2015.
  */
 
+//TODO: USE GenericConverter
 @Component
-public class PositionConverter implements Converter<String, Position> {
+public class StringToEmployeeConverter implements Converter<String, Employee> {
     @Autowired
-    private PositionService positionService;
+    private EmployeeService service;
 
     @Override
-    public Position convert(String s)  {
+    public Employee convert(String s) {
         if (s == null)
             return null;
 
@@ -29,6 +29,6 @@ public class PositionConverter implements Converter<String, Position> {
             return null;
         }
 
-        return positionService.find(id);
+        return service.find(id);
     }
 }

@@ -1,0 +1,58 @@
+<!--
+  Created by IntelliJ IDEA.
+  User: Vladyslav
+  Date: 07.12.2015
+  Time: 21:51
+  To change this template use File | Settings | File Templates.
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns="http://www.w3.org/1999/xhtml"
+          xmlns:c="http://java.sun.com/jsp/jstl/core" version="2.0">
+    <h1>Керування Записами</h1>
+    <a class="btn btn-primary"
+       href="${pageContext.request.contextPath}/tickets-invoices/${invoiceId}/control-letters/${controlLetterId}/rows/create">Додати</a>
+    <div class="clearfix"></div>
+    <c:choose>
+        <c:when test="${empty type || empty message}"/>
+        <c:otherwise>
+            <div class="alert alert-${type}">${message}</div>
+        </c:otherwise>
+    </c:choose>
+    <c:if test="${not empty controlLetterRows}">
+        <table class="table">
+            <thead>
+            <tr>
+                <!--<th>Номер контрольного листа</th>-->
+                <th>Кондуктор</th>
+                <th>Маршрут</th>
+                <!--<th>Дата</th>-->
+                <th>Квитків видано</th>
+                <th>Квитків повернено</th>
+            </tr>
+            </thead>
+            <tbody>
+            <c:forEach items="${controlLetterRows}" var="controlLetterRow">
+                <tr>
+                    <!--<td>${controlLetterRow.id}</td>-->
+                    <td>${controlLetterRow.conductor.fullname}</td>
+                    <td>${controlLetterRow.route.number}</td>
+                    <td>${controlLetterRow.ticketsGiven}</td>
+                    <td>${controlLetterRow.ticketsReturned}</td>
+                    <td>
+                        <a href="${pageContext.request.contextPath}/tickets-invoices/${invoiceId}/control-letters/${controlLetterId}/rows/${controlLetterRow.id}"
+                           class="btn btn-sm btn-primary">
+                            <span class="glyphicon glyphicon-pencil" />
+                        </a>
+                        <a href="${pageContext.request.contextPath}/tickets-invoices/${invoiceId}/control-letters/${controlLetterId}/rows/${controlLetterRow.id}/delete"
+                           class="btn btn-sm btn-danger delete-button">
+                            <span class="glyphicon glyphicon-erase" />
+                        </a>
+                    </td>
+                </tr>
+            </c:forEach>
+            </tbody>
+        </table>
+    </c:if>
+    <c:if test="${empty controlLetterRows}">
+        <h2 class="alert-warning">Список записів порожній</h2>
+    </c:if>
+</jsp:root>

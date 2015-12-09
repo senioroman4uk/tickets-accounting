@@ -1,0 +1,53 @@
+<!--
+  Created by IntelliJ IDEA.
+  User: Vladyslav
+  Date: 06.12.2015
+  Time: 11:16
+  To change this template use File | Settings | File Templates.
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns="http://www.w3.org/1999/xhtml"
+          xmlns:c="http://java.sun.com/jsp/jstl/core" version="2.0" xmlns:spring="http://www.springframework.org/tags">
+    <h1>Керування накладними про надходження квитків з типографії</h1>
+    <a class="btn btn-primary" href="${pageContext.request.contextPath}/tickets-invoices/create">Додати</a>
+    <div class="clearfix"></div>
+    <c:choose>
+        <c:when test="${empty type || empty message}"/>
+        <c:otherwise>
+            <div class="alert alert-${type}">${message}</div>
+        </c:otherwise>
+    </c:choose>
+    <c:if test="${not empty ticketsInvoices}">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Кількість квитків</th>
+                <th>Дата надходження</th>
+                <th>Головний касир</th>
+            </tr>
+            </thead>
+            <tbody>
+            <c:forEach items="${ticketsInvoices}" var="ticketsInvoice">
+                <tr>
+                    <td>${ticketsInvoice.amount}</td>
+                    <td>${ticketsInvoice.date}</td>
+                    <td>${ticketsInvoice.mainCashier.fullname}</td>
+                    <td>
+                        <a href="${pageContext.request.contextPath}/tickets-invoices/${ticketsInvoice.id}" class="btn btn-sm btn-primary">
+                            <span class="glyphicon glyphicon-pencil" />
+                        </a>
+                        <a href="${pageContext.request.contextPath}/tickets-invoices/${ticketsInvoice.id}/delete" class="btn btn-sm btn-danger delete-button">
+                            <span class="glyphicon glyphicon-erase" />
+                        </a>
+                        <a href="${pageContext.request.contextPath}/tickets-invoices/${ticketsInvoice.id}/control-letters" class="btn btn-sm btn-default">
+                            <span class="glyphicon glyphicon-list" />
+                        </a>
+                    </td>
+                </tr>
+            </c:forEach>
+            </tbody>
+        </table>
+    </c:if>
+    <c:if test="${empty ticketsInvoices}">
+        <h2 class="alert-warning">Список накладних порожній</h2>
+    </c:if>
+</jsp:root>

@@ -1,24 +1,24 @@
 package org.kpi.senioroman4uk.tickets_accounting.converters;
 
-
 import org.kpi.senioroman4uk.tickets_accounting.domain.Position;
-import org.kpi.senioroman4uk.tickets_accounting.service.PositionService;
+import org.kpi.senioroman4uk.tickets_accounting.domain.Route;
+import org.kpi.senioroman4uk.tickets_accounting.service.RouteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 
 /**
- * Created by Vladyslav on 30.11.2015.
+ * Created by Vladyslav on 08.12.2015.
  *
  */
 
 @Component
-public class PositionConverter implements Converter<String, Position> {
+public class RouteConverter implements Converter<String, Route> {
     @Autowired
-    private PositionService positionService;
+    private RouteService routeService;
 
     @Override
-    public Position convert(String s)  {
+    public Route convert(String s)  {
         if (s == null)
             return null;
 
@@ -29,6 +29,6 @@ public class PositionConverter implements Converter<String, Position> {
             return null;
         }
 
-        return positionService.find(id);
+        return routeService.find(id);
     }
 }
