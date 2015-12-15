@@ -1,13 +1,21 @@
 package org.kpi.senioroman4uk.tickets_accounting.dao;
 
+import javafx.util.Pair;
 import org.kpi.senioroman4uk.tickets_accounting.domain.ControlLetter;
 import org.kpi.senioroman4uk.tickets_accounting.domain.Employee;
+import org.kpi.senioroman4uk.tickets_accounting.domain.Route;
+import org.kpi.senioroman4uk.tickets_accounting.domain.RouteIncomeModel;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.metadata.HsqlTableMetaDataProvider;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
+import java.text.DateFormatSymbols;
+import java.util.*;
+import java.util.function.Function;
 
 /**
  * Created by Vladyslav on 06.12.2015.
@@ -122,6 +130,76 @@ public class ControlLetterDAOImplementation extends GenericDAOImplementation<Con
         return jdbcTemplate.queryForObject(sql, parameters, Integer.class);
     }
 
+    @Override
+    public List<Pair<String, Double>> reportIncome(Date startDate, Date finishDate) {
+        //language=SQL
+        String sql = "SELECT SUM((clr.ticketsGiven - clr.ticketsReturned) * cl.price) total, DATEPART(mm, cl.date) [month] " +
+                "FROM ControlLetterRow clr " +
+                "INNER JOIN ControlLetter cl ON(cl.id = clr.ControlLetterId) " +
+                "WHERE cl.date BETWEEN :startDate AND :finishDate " +
+                "GROUP BY DATEPART(mm, cl.date)";
+
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("startDate", startDate);
+        parameters.put("finishDate", finishDate);
+
+        return jdbcTemplate.query(sql, parameters, (resultSet, i) -> {
+            int month = resultSet.getInt("month");
+            Locale locale = LocaleContextHolder.getLocale();
+
+            DateFormatSymbols symbols = new DateFormatSymbols(locale);
+            return new Pair<>(symbols.getShortMonths()[month - 1], resultSet.getDouble("total"));
+        });
+    }
+
+    @Override
+    public List<RouteIncomeModel> reportRoutesIncome(Date startDate, Date finishDate) {
+        //language=SQL
+        String sql = "SELECT r.id, r.number, CONVERT(DATE, cl.date) [date], ISNULL(SUM((clr.ticketsGiven - clr.ticketsReturned) * cl.price), 0) total " +
+                "FROM Route r " +
+                "LEFT JOIN ControlLetterRow clr ON(clr.routeId = r.id) " +
+                "LEFT JOIN ControlLetter cl ON(clr.ControlLetterId = cl.id) " +
+                "WHERE cl.date BETWEEN :startDate AND :finishDate OR [date] IS NULL " +
+                "GROUP BY CONVERT(DATE, cl.date), r.id, r.number " +
+                "ORDER BY [date]";
+
+        HashMap<String, Object> parameters = new HashMap<>();
+        parameters.put("startDate", startDate);
+        parameters.put("finishDate", finishDate);
+
+        return jdbcTemplate.query(sql, parameters, (ResultSetExtractor<List<RouteIncomeModel>>) resultSet -> {
+
+            HashMap<Integer,RouteIncomeModel> results = new HashMap<>();
+            HashSet<Date> dates = new HashSet<>();
+            HashSet<Integer> routes = new HashSet<>();
+            Hash f = (number, date) -> 31 + (16 << number) + date.hashCode() + 33;
+
+            while (resultSet.next()) {
+                Date date = resultSet.getDate("date");
+                Integer route = (Integer) resultSet.getObject("number");
+                if (!routes.contains(route))
+                    routes.add(route);
+
+                if (date != null && !dates.contains(date))
+                    dates.add(date);
+                else if (date == null) {
+                    continue;
+                }
+
+                results.put(f.hash(route, date), new RouteIncomeModel(route, (Date)date.clone(), resultSet.getDouble("total")));
+            }
+
+
+            for(int route: routes)
+                for(Date date : dates) {
+                    if (!results.containsKey(f.hash(route, date)))
+                        results.put(f.hash(route, date), new RouteIncomeModel(route, date, 0d));
+                }
+
+            return new ArrayList<>(results.values());
+        });
+    }
+
     public static final class ControlLetterRowMapper implements RowMapper<ControlLetter> {
 
         @Override
@@ -138,5 +216,9 @@ public class ControlLetterDAOImplementation extends GenericDAOImplementation<Con
             controlLetter.setCashier(new EmployeeDAOImplementation.EmployeeRowMapper().mapRow(resultSet, i));
             return controlLetter;
         }
+    }
+
+    private interface Hash {
+        int hash(int number, Date date);
     }
 }

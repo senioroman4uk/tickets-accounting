@@ -28,7 +28,6 @@ import java.util.List;
 @RequestMapping("/employees")
 public class EmployeeController extends BaseController {
     private static final Logger logger = Logger.getLogger(EmployeeController.class);
-    private static final boolean DEBUG = logger.isDebugEnabled();
 
     @Autowired
     private EmployeeService employeeService;
@@ -39,9 +38,6 @@ public class EmployeeController extends BaseController {
 
     @RequestMapping(method = {RequestMethod.GET})
     public String find(Model model, RedirectAttributes redirectAttributes) {
-        if (DEBUG)
-            logger.info("UserController.find() is executed");
-
         List<Employee> employees = employeeService.findAll();
         handleFlashMessages(redirectAttributes, model);
 

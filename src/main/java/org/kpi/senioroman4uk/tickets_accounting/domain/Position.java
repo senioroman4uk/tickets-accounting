@@ -1,5 +1,6 @@
 package org.kpi.senioroman4uk.tickets_accounting.domain;
 
+import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 /**
@@ -9,6 +10,7 @@ import java.io.Serializable;
 
 public class Position implements Serializable, ViewModel {
     private Integer id;
+    @Size(max = 50, min = 1)
     private String name;
 
     public Position() {}

@@ -1,0 +1,96 @@
+<!--
+  Created by IntelliJ IDEA.
+  User: Vladyslav
+  Date: 13.12.2015
+  Time: 19:46
+  To change this template use File | Settings | File Templates.
+-->
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" xmlns="http://www.w3.org/1999/xhtml" version="2.0"
+          xmlns:fmt="http://java.sun.com/jsp/jstl/fmt">
+    <script type="text/javascript" src="/resources/bower_components/Chart.js/Chart.js/"><jsp:text/></script>
+    <script type="text/javascript">
+        // <![CDATA[
+        $(document).ready(function(){
+            var chart;
+            function getRandomColor() {
+                var letters = '0123456789ABCDEF'.split('');
+                var color = '#';
+                for (var i = 0; i < 6; i++ ) {
+                    color += letters[Math.floor(Math.random() * 16)];
+                }
+                return color;
+            }
+
+            $('#reportForm').submit(function(event) {
+                event.preventDefault();
+                $.post($(this).attr('action'), $(this).serialize(), function(data) {
+
+                    var labels = [];
+                    var series = [];
+                    var routes = [];
+
+                    data.forEach(function(element) {
+                        if(labels.indexOf(element.date) < 0)
+                            labels.push(element.date);
+                        if(routes.indexOf(element.number) < 0)
+                            routes.push(element.number);
+                    });
+
+                    console.log(labels);
+
+                    routes.forEach(function(route, index) {
+                        series.push({
+                            data: [],
+                            fillColor : getRandomColor(),
+                            label : 'Маршрут №' + route
+                        });
+
+                        for(var i = 0; i < labels.length; i++) {
+                            var model = $.grep(data, function(label) {
+                                return function (el) {
+                                    return el.number == route && el.date == label;
+                                }
+                            }(labels[i]));
+
+                            if(model.length > 0)
+                                series[index].data.push(model[0].total);
+                        }
+                    });
+                    var ctx = document.getElementById("myChart").getContext("2d");
+                    if(chart != null)
+                        chart.destroy();
+
+                    var sort = [];
+                    for(var i = 0; i < labels.length; i++)
+                    {
+                        sort.push({date: labels[i], series: series[i]});
+                    }
+                    sort = sort.sort(function(a, b) {
+                        return a.date > b.date;
+                    });
+
+                    for(i = 0; i < sort.length; i++) {
+                        labels[i] = sort[i].date;
+                        series[i] = sort[i].series;
+                    }
+
+                    chart = new Chart(ctx).Bar({labels: labels, datasets: series}, {
+                        responsive : true,
+                        barValueSpacing : 2,
+                        barDatasetSpacing : 1,
+                        multiTooltipTemplate: "<%= datasetLabel %> - <%= value %>"
+                    });
+                }, 'json');
+            }) ;
+        });
+    // ]]>
+    </script>
+    <form id="reportForm" action="${pageContext.request.contextPath}/route-incomes" class="form-inline" method="post" name="reportForm">
+        <fmt:formatDate value="${startDate}" pattern="y-MM-d" var="strStartDate"/>
+        <fmt:formatDate value="${finishDate}" pattern="y-MM-d" var="strFinishDate"/>
+        <input name="startDate" value="${strStartDate}" class="form-control"/>
+        <input name="finishDate" value="${strFinishDate}" class="form-control"/>
+        <button type="submit">Оновити звіт</button>
+    </form>
+    <canvas id="myChart" class="canvas"/>
+</jsp:root>

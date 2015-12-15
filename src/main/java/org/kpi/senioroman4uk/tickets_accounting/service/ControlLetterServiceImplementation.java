@@ -1,10 +1,13 @@
 package org.kpi.senioroman4uk.tickets_accounting.service;
 
+import javafx.util.Pair;
 import org.kpi.senioroman4uk.tickets_accounting.dao.ControlLetterDAO;
 import org.kpi.senioroman4uk.tickets_accounting.domain.ControlLetter;
+import org.kpi.senioroman4uk.tickets_accounting.domain.RouteIncomeModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -52,6 +55,16 @@ public class ControlLetterServiceImplementation implements ControlLetterService 
     public int amountLeft(int id, Integer controlLetterRowId) {
         int rowId = controlLetterRowId == null ? -1 : controlLetterRowId;
         return controlLetterDAO.amountLeft(id, rowId);
+    }
+
+    @Override
+    public List<Pair<String, Double>> reportIncome(Date startDate, Date finishDate) {
+        return controlLetterDAO.reportIncome(startDate, finishDate);
+    }
+
+    @Override
+    public List<RouteIncomeModel> reportRoutesIncome(Date startDate, Date finishDate) {
+        return  controlLetterDAO.reportRoutesIncome(startDate, finishDate);
     }
 
     @Override

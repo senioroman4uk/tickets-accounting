@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import java.util.Date;
+
 /**
  * Created by Vladyslav on 07.12.2015.
  *
@@ -40,5 +42,8 @@ public class TicketsInvoiceValidator implements Validator {
         if (ticketsInvoice.getAmount() < ticketsInvoiceService.totalAmount(ticketsInvoice.getId())) {
             errors.rejectValue("amount", "TicketsInvoice.amount.tooSmall");
         }
+
+        if (ticketsInvoice.getDate().after(new Date()))
+            errors.rejectValue("date", "TicketsInvoice.date.tooBig");
     }
 }

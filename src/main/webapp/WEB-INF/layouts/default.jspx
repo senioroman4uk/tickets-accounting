@@ -19,10 +19,9 @@
         <spring:url value="/resources/styles/style.css" var="style_url"/>
         <spring:url value="/resources/bower_components/jquery/dist/jquery.min.js" var="jquery_url"/>
         <spring:url value="/resources/bower_components/bootstrap/dist/js/bootstrap.min.js" var="bootstrap_js_url"/>
-
         <link rel="stylesheet" type="text/css" media="screen" href="${bootstrap_url}"/>
         <link rel="stylesheet" type="text/css" media="screen" href="${style_url}"/>
-        <script type="text/javascript" src="${jquery_url}" > <jsp:text/> </script>
+        <script type="text/javascript" src="${jquery_url}" ><jsp:text/> </script>
         <script type="text/javascript" src="${bootstrap_js_url}"><jsp:text/></script>
         <title>
             <spring:message code="head_title"/>

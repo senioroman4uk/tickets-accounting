@@ -65,7 +65,7 @@ public class PositionController extends BaseController {
     public String createOrUpdate(@ModelAttribute("position") @Validated Position position,
                                  BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         if (bindingResult.hasErrors()) {
-            return "employee/edit";
+            return "position/edit";
         }
 
         return handleSaving(position, positionService, redirectAttributes, null);

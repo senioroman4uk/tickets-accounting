@@ -25,7 +25,7 @@ public class TicketsInvoice implements Serializable, ViewModel {
     @NotNull
     private Date date;
 
-    @Min(1)
+    @Min(value = 1)
     private int amount;
 
     @Override

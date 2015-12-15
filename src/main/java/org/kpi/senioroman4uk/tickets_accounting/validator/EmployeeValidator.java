@@ -31,7 +31,7 @@ public class EmployeeValidator implements Validator {
                 errors.rejectValue("birthDate", "employeeForm.birthDate.after");
 
         }
-        else
-            errors.rejectValue("birthDate", "employeeForm.birthDate.required");
+//        else
+//            errors.rejectValue("birthDate", "employeeForm.birthDate.required");
     }
 }

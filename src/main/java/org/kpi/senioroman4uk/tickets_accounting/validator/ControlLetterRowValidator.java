@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
+import java.util.Date;
+
 /**
  * Created by Vladyslav on 08.12.2015.
  *
@@ -31,7 +33,7 @@ public class ControlLetterRowValidator implements Validator {
 
         Employee employee = controlLetterRow.getConductor();
         if (employee != null && employee.getPosition().getId() != Employee.EmployeePosition.CONDUCTOR.getId()) {
-            errors.rejectValue("conductor", "ControlLetterRow.conductor.Rejected");
+             errors.rejectValue("conductor", "ControlLetterRow.conductor.Rejected");
         }
 
         if (controlLetterRow.getTicketsGiven() < controlLetterRow.getTicketsReturned())

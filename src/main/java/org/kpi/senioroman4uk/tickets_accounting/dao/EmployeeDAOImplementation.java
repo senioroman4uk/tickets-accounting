@@ -107,11 +107,6 @@ public class EmployeeDAOImplementation extends GenericDAOImplementation<Employee
         return jdbcTemplate.update(sql, parameters) > 0;
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-
-    }
-
     public static final class EmployeeRowMapper implements RowMapper<Employee> {
 
         @Override
